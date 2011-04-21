@@ -108,7 +108,7 @@ class Protobuf {
 			return 8;
 		if ($i < 0x8000000000000000)
 			return 9;
-	}
+	} 
 
 	/**
 	 * Tries to read a varint from $fp.
@@ -147,14 +147,50 @@ class Protobuf {
 		return $i;
 	}
 
-	public static function read_double($fp){throw "I've not coded it yet Exception";}
-	public static function read_float ($fp){throw "I've not coded it yet Exception";}
-	public static function read_uint64($fp){throw "I've not coded it yet Exception";}
-	public static function read_int64 ($fp){throw "I've not coded it yet Exception";}
-	public static function read_uint32($fp){throw "I've not coded it yet Exception";}
-	public static function read_int32 ($fp){throw "I've not coded it yet Exception";}
-	public static function read_zint32($fp){throw "I've not coded it yet Exception";}
-	public static function read_zint64($fp){throw "I've not coded it yet Exception";}
+	public static function read_uint64($fp){throw new Exception("I've not coded read_uint64 yet Exception");}
+	public static function read_int64 ($fp){throw new Exception("I've not coded read_int64 yet Exception");}
+	public static function read_uint32($fp){throw new Exception("I've not coded read_uint32 yet Exception");}
+	public static function read_int32 ($fp){throw new Exception("I've not coded read_int32 yet Exception");}
+
+	/**
+	 * Tries to read a float from $fp
+	 * @returns the float, or FALSE if the stream has reached eof
+	 */
+	public static function read_float ($fp){
+	    if(!($fraw = fread($fp,4)))
+		return FALSE;
+	    $farray = unpack('f',$fraw);
+	    return array_shift($farray);
+	}
+
+	/**
+	 * Tries to read a double from $fp
+	 * @returns the double, or FALSE if the stream has reached eof
+	 */
+	public static function read_double($fp){
+	    if(!($draw = fread($fp,8)))
+		return FALSE;
+	    $darray = unpack('d',$draw);
+	    return array_shift($darray);
+	}
+
+	/**
+	 * Tries to read a sint32 from $fp.
+	 * @returns the sint32 from the stream, or false if the stream has reached eof.
+	 **/
+	public static function read_zint32($fp){
+	    $i = Protobuf::read_varint($fp);
+	    return (!($i & 0x1) ? ($i >> 1) : (($i >> 1) ^ (~0)));
+	}
+
+	/**
+	 * Tries to read a sint64 from $fp.
+	 * @returns the sint64 from the stream, or false if the stream has reached eof.
+	 **/
+	public static function read_zint64($fp){
+	    $i = Protobuf::read_varint($fp);
+	    return (!($i & 0x1) ? ($i >> 1) : (($i >> 1) ^ (~0)));
+	}
 
 	/**
 	 * Writes a varint to $fp
@@ -181,14 +217,55 @@ class Protobuf {
 		return $len;
 	}
 
-	public static function write_double($fp, $d){throw "I've not coded it yet Exception";}
-	public static function write_float ($fp, $f){throw "I've not coded it yet Exception";}
-	public static function write_uint64($fp, $i){throw "I've not coded it yet Exception";}
-	public static function write_int64 ($fp, $i){throw "I've not coded it yet Exception";}
-	public static function write_uint32($fp, $i){throw "I've not coded it yet Exception";}
-	public static function write_int32 ($fp, $i){throw "I've not coded it yet Exception";}
-	public static function write_zint32($fp, $i){throw "I've not coded it yet Exception";}
-	public static function write_zint64($fp, $i){throw "I've not coded it yet Exception";}
+	public static function write_uint64($fp, $i){throw new Exception("I've not coded write_uint64 yet Exception");}
+	public static function write_int64 ($fp, $i){throw new Exception("I've not coded write_int64 yet Exception");}
+	public static function write_uint32($fp, $i){throw new Exception("I've not coded write_uint32 yet Exception");}
+	public static function write_int32 ($fp, $i){throw new Exception("I've not coded write_int32 yet Exception");}
+
+	/**
+	 * Write a float to $fp
+	 * returns the number of bytes written
+	 * @param $fp
+	 * @param $f The float to encode
+	 * @return The number of bytes written
+	 * @note PHP uses doubles for floats internally. Writing a float will lose precision.
+	 */
+	public static function write_float($fp, $f){
+	    return fwrite($fp,pack('f',$f));
+	}
+
+	/**
+	 * Write a double to $fp
+	 * returns the number of bytes written
+	 * @param $fp
+	 * @param $d The double to encode
+	 * @return The number of bytes written
+	 */
+	public static function write_double($fp, $d){
+	    return fwrite($fp,pack('d',$d));
+	}
+
+	/**
+	 * Writes a sint32 to $fp
+	 * returns the number of bytes written
+	 * @param $fp
+	 * @param $i The int to encode
+	 * @return The number of bytes written
+	 */
+	public static function write_zint32($fp, $i){
+		return Protobuf::write_varint($fp,($i>= 0 ? ($i << 1) : (($i << 1) ^ ~0)));
+	}
+
+	/**
+	 * Writes a sint64 to $fp
+	 * returns the number of bytes written
+	 * @param $fp
+	 * @param $i The int to encode
+	 * @return The number of bytes written
+	 */
+	public static function write_zint64($fp, $i){
+		return Protobuf::write_varint($fp,($i>= 0 ? ($i << 1) : (($i << 1) ^ ~0)));
+	}
 
 	/**
 	 * Seek past a varint
