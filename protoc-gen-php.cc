@@ -885,6 +885,10 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 
 				"public function get`capitalized_name`Count() { if ($this->`name` === null ) return 0; else return count($this->`name`); }\n"
 				"public function remove`capitalized_name`($index) { unset($this->`name`[$index]); }\n"
+				"public function push`capitalized_name`($newvar) { return array_push($this->`name`,$newvar); }\n"
+				"public function pop`capitalized_name`() { return array_pop($this->`name`); }\n"
+				"public function shift`capitalized_name`() { return array_shift($this->`name`); }\n"
+				"public function unshift`capitalized_name`($newvar) { return array_unshift($this->`name`,$newvar); }\n"
 				"public function get`capitalized_name`($index) { return $this->`name`[$index]; }\n"
 				"public function get`capitalized_name`Array() { if ($this->`name` === null ) return array(); else return $this->`name`; }\n"
 			);
