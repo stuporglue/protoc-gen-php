@@ -750,7 +750,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 	/*
 	printer.Print(
 		"// Array maps field indexes to members\n"
-		"private static $_map = array (\n"
+		"protectec static $_map = array (\n"
 	);
 	printer.Indent();
 			for (int i = 0; i < message.field_count(); ++i) {
@@ -765,7 +765,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 	printer.Print(");\n\n");
 	*/
 	if (!skip_unknown)
-		printer.Print("private $_unknown;\n");
+		printer.Print("protectec $_unknown;\n");
 
 	// Constructor
 	printer.Print(
@@ -880,7 +880,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 			// Repeated field
 			printer.Print(variables,
 				"// `comment`\n"
-				"private $`name` = null;\n"
+				"protectec $`name` = null;\n"
 				"public function clear`capitalized_name`() { $this->`name` = null; }\n"
 
 				"public function get`capitalized_name`Count() { if ($this->`name` === null ) return 0; else return count($this->`name`); }\n"
@@ -904,7 +904,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 			// Non repeated field
 			printer.Print(variables,
 				"// `comment`\n"
-				"private $`name` = null;\n"
+				"protectec $`name` = null;\n"
 				"public function clear`capitalized_name`() { $this->`name` = null; }\n"
 				"public function has`capitalized_name`() { return $this->`name` !== null; }\n"
 
