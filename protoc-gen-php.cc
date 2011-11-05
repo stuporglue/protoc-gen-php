@@ -750,7 +750,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 	/*
 	printer.Print(
 		"// Array maps field indexes to members\n"
-		"protectec static $_map = array (\n"
+		"protected static $_map = array (\n"
 	);
 	printer.Indent();
 			for (int i = 0; i < message.field_count(); ++i) {
@@ -765,7 +765,7 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 	printer.Print(");\n\n");
 	*/
 	if (!skip_unknown)
-		printer.Print("protectec $_unknown;\n");
+		printer.Print("protected $_unknown;\n");
 
 	// Constructor
 	printer.Print(
@@ -880,17 +880,16 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 			// Repeated field
 			printer.Print(variables,
 				"// `comment`\n"
-				"protectec $`name` = null;\n"
-				"public function clear`capitalized_name`() { $this->`name` = null; }\n"
-
-				"public function get`capitalized_name`Count() { if ($this->`name` === null ) return 0; else return count($this->`name`); }\n"
+				"protected $`name` = array();\n"
+				"public function clear`capitalized_name`() { $this->`name` = array(); }\n"
+				"public function get`capitalized_name`Count() { return count($this->`name`); }\n"
 				"public function remove`capitalized_name`($index) { unset($this->`name`[$index]); }\n"
 				"public function push`capitalized_name`($newvar) { return array_push($this->`name`,$newvar); }\n"
 				"public function pop`capitalized_name`() { return array_pop($this->`name`); }\n"
 				"public function shift`capitalized_name`() { return array_shift($this->`name`); }\n"
 				"public function unshift`capitalized_name`($newvar) { return array_unshift($this->`name`,$newvar); }\n"
 				"public function get`capitalized_name`($index) { return $this->`name`[$index]; }\n"
-				"public function get`capitalized_name`Array() { if ($this->`name` === null ) return array(); else return $this->`name`; }\n"
+				"public function get`capitalized_name`Array() { return $this->`name`; }\n"
 			);
 
 			// TODO Change the set code to validate input depending on the variable type
@@ -904,11 +903,11 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 			// Non repeated field
 			printer.Print(variables,
 				"// `comment`\n"
-				"protectec $`name` = null;\n"
+				"protected $`name` = `default`;\n"
 				"public function clear`capitalized_name`() { $this->`name` = null; }\n"
 				"public function has`capitalized_name`() { return $this->`name` !== null; }\n"
 
-				"public function get`capitalized_name`() { if($this->`name` === null) return `default`; else return $this->`name`; }\n"
+				"public function get`capitalized_name`() { return $this->`name`; }\n"
 			);
 
 			// TODO Change the set code to validate input depending on the variable type
