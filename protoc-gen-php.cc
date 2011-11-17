@@ -904,19 +904,29 @@ void PHPCodeGenerator::PrintMessage(io::Printer &printer, const Descriptor & mes
 
 		} else {
 			// Non repeated field
-			printer.Print(variables,
-				"// `comment`\n"
-				"protected $`name` = `default`;\n"
-				"public function clear`capitalized_name`() { $this->`name` = null; }\n"
-				"public function has`capitalized_name`() { return $this->`name` !== null; }\n"
+			// Determine if we should print the default, or leave unset 
+			if(field.has_default_value()){
+			    printer.Print(variables,
+				    "// `comment`\n"
+				    "protected $`name` = `default`;\n"
+				    "public function reset`capitalized_name`() { $this->`name` = `default`;}\n" 
+			    );
 
+			}else{
+			    printer.Print(variables,
+				    "// `comment`\n"
+				    "protected $`name`;\n"
+				    "public function reset`capitalized_name`() { unset($this->`name`); }\n"
+			    );
+			}
+
+			printer.Print(variables,
+				"public function clear`capitalized_name`() { unset($this->`name`); }\n"
+				"public function has`capitalized_name`() { return isset($this->`name`); }\n"
 				"public function get`capitalized_name`() { return $this->`name`; }\n"
-			);
-
-			// TODO Change the set code to validate input depending on the variable type
-			printer.Print(variables,
 				"public function set`capitalized_name`(`type`$value) { $this->`name` = $value; }\n"
-			);
+				);
+
 		}
 			}
 
